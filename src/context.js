@@ -10,7 +10,32 @@ const AppProvider = ({ children }) => {
   const [searchTerm, setSearchTerm] = useState('a');
   const [cocktails, setCocktails] = useState([]);
 
-  return <AppContext.Provider value={{ loading, searchTerm, cocktails, setSearchTerm }}>{children}</AppContext.Provider>
+  const fetchDrinks = async () => {
+    setLoading(true)
+    try {
+      const response = await fetch(`${url}${searchTerm}`);
+      const data = await response.json();
+      console.log(data);
+      const { drinks } = data;
+      if (drinks) {
+
+      }
+      else {
+        setCocktails([])
+      }
+      setLoading(false)
+    } catch (error) {
+      console.log(error)
+      setLoading(false)
+    }
+
+  }
+
+  useEffect(() => {
+    fetchDrinks();
+  }, [searchTerm])
+
+  return <AppContext.Provider value={{ loading, cocktails, setSearchTerm }}>{children}</AppContext.Provider>
 }
 // make sure use
 export const useGlobalContext = () => {
